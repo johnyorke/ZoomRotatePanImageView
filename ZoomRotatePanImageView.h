@@ -3,7 +3,7 @@
 // 
 //
 //  Created by bennythemink on 20/07/12.
-//  Copyright (c) 2012 AppsCore. All rights reserved.
+//  Copyright (c) 2012 bennythemink. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
