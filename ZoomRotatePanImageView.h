@@ -23,6 +23,6 @@
 
 - (void)zoomRotatePanImageViewWillMove:(ZoomRotatePanImageView *)view;
 
-- (void)zoomRatePanImageViewWasRemovedFromCanvas:(ZoomRotatePanImageView *)view;
+- (void)zoomRotatePanImageViewWasRemovedFromCanvas:(ZoomRotatePanImageView *)view;
 
 @end
