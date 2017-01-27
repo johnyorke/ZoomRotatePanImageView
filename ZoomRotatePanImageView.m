@@ -120,7 +120,7 @@
 - (IBAction) handleDoubleTap:(UITapGestureRecognizer*)recogniser {
     [self removeFromSuperview];
     if (_delegate) {
-        [_delegate zoomRatePanImageViewWasRemovedFromCanvas:self];
+        [_delegate zoomRotatePanImageViewWasRemovedFromCanvas:self];
     }
 }
 
