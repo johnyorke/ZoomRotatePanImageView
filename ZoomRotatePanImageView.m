@@ -1,11 +1,3 @@
-//
-//  ZoomRotatePanImageView.m
-//  
-//
-//  Created by bennythemink on 20/07/12.
-//  Copyright (c) 2012 bennythemink. All rights reserved.
-//
-
 #import "ZoomRotatePanImageView.h"
 
 @interface ZoomRotatePanImageView ()
@@ -70,16 +62,20 @@
     _rotateRecogniser = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotate:)];
     _panRecogniser = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     _tapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    _doubleTapRecogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
+    _doubleTapRecogniser.numberOfTapsRequired = 2;
     
     [_pinchRecogniser setDelegate:self];
     [_rotateRecogniser setDelegate:self];
     [_panRecogniser setDelegate:self];
     [_tapRecogniser setDelegate:self];
+    [_doubleTapRecogniser setDelegate:self];
     
     [self addGestureRecognizer:_pinchRecogniser];
     [self addGestureRecognizer:_rotateRecogniser];
     [self addGestureRecognizer:_panRecogniser];
     [self addGestureRecognizer:_tapRecogniser];
+    [self addGestureRecognizer:_doubleTapRecogniser];
     
     // set the aspect ratio mode
     [self setContentMode:UIViewContentModeScaleAspectFit];
@@ -88,24 +84,43 @@
 - (IBAction) handlePinch:(UIPinchGestureRecognizer*)recogniser {
     recogniser.view.transform = CGAffineTransformScale(recogniser.view.transform, recogniser.scale, recogniser.scale);
     recogniser.scale = 1;
+    if (recogniser.state == UIGestureRecognizerStateBegan) {
+        [self viewWillChange];
+    }
 }
 
 - (IBAction) handleRotate:(UIRotationGestureRecognizer*)recogniser {
     recogniser.view.transform = CGAffineTransformRotate(recogniser.view.transform, recogniser.rotation);
     recogniser.rotation = 0;
+    if (recogniser.state == UIGestureRecognizerStateBegan) {
+        [self viewWillChange];
+    }
 }
 
 - (IBAction) handleTap:(UITapGestureRecognizer*)recogniser {
-    [self resetWithAnimation:TRUE];
+    [self.superview bringSubviewToFront:self];
 }
 
 - (IBAction) handlePan:(UIPanGestureRecognizer*)recogniser {
     
-    if (recogniser.state == UIGestureRecognizerStateBegan || recogniser.state == UIGestureRecognizerStateChanged) {
+    if (recogniser.state == UIGestureRecognizerStateChanged) {
         CGPoint translation = [recogniser translationInView:self.superview];
         CGPoint translatedCenter = CGPointMake(self.center.x + translation.x, self.center.y + translation.y);
         [self setCenter:translatedCenter];
         [recogniser setTranslation:CGPointZero inView:self];
+    } if (recogniser.state == UIGestureRecognizerStateBegan) {
+        CGPoint translation = [recogniser translationInView:self.superview];
+        CGPoint translatedCenter = CGPointMake(self.center.x + translation.x, self.center.y + translation.y);
+        [self setCenter:translatedCenter];
+        [recogniser setTranslation:CGPointZero inView:self];
+        [self viewWillChange];
+    }
+}
+
+- (IBAction) handleDoubleTap:(UITapGestureRecognizer*)recogniser {
+    [self removeFromSuperview];
+    if (_delegate) {
+        [_delegate zoomRatePanImageViewWasRemovedFromCanvas:self];
     }
 }
 
@@ -129,6 +144,14 @@
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return TRUE;
+}
+
+#pragma mark - ZoomRotatePanImageViewDelegate
+
+- (void)viewWillChange {
+    if (_delegate) {
+        [_delegate zoomRotatePanImageViewWillMove:self];
+    }
 }
 
 @end
