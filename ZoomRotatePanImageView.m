@@ -143,7 +143,7 @@
 #pragma mark - UIGestureRecognizer Delegate Methods
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    return TRUE;
+    return FALSE;
 }
 
 #pragma mark - ZoomRotatePanImageViewDelegate
