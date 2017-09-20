@@ -1,0 +1,3 @@
+[submodule "RMShapedImageView"]
+	path = RMShapedImageView
+	url = git://github.com/robotmedia/RMShapedImageView

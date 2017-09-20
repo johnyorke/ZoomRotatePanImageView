@@ -1,8 +1,9 @@
 #import <UIKit/UIKit.h>
+#import <RMShapedImageView.h>
 
 @protocol ZoomRotatePanImageViewDelegate;
 
-@interface ZoomRotatePanImageView : UIImageView <UIGestureRecognizerDelegate> {
+@interface ZoomRotatePanImageView : RMShapedImageView <UIGestureRecognizerDelegate> {
     
 @protected
     UIPinchGestureRecognizer *_pinchRecogniser;
